@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Reparto de Portes — Electromat Balear</title>
+  <style>
+    :root {
+      --eb-blue: #000079;
+      --eb-yellow: #FED80E;
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #475569;
+      --border: #e2e8f0;
+      --shadow: 0 10px 30px rgba(15, 23, 42, .08);
+      --radius: 12px;
+      --bad: #991b1b;
+      --good: #166534;
+      --info: #0369a1;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      color: var(--text);
+      background: radial-gradient(1200px 600px at 20% -10%, rgba(254, 216, 14, .15), transparent 60%), var(--bg);
+      min-height: 100vh;
+    }
+
+    header {
+      background: var(--eb-blue);
+      color: white;
+      padding: 1rem;
+      border-bottom: 3px solid var(--eb-yellow);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .wrap {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 1.5rem;
+      margin-top: 2rem;
+      padding-bottom: 3rem;
+    }
+
+    @media (max-width: 1100px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .card-h {
+      padding: 1rem;
+      border-bottom: 1px solid var(--border);
+      font-weight: 800;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .card-b {
+      padding: 1.25rem;
+    }
+
+    label {
+      display: block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--muted);
+      margin-bottom: 4px;
+      text-transform: uppercase;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.9rem;
+      outline: none;
+      margin-bottom: 1rem;
+    }
+
+    .field-manual {
+      background-color: #fffde7;
+      border-left: 4px solid var(--eb-yellow);
+    }
+
+    .field-info {
+      background-color: #f8fafc;
+      border: 1px solid var(--border);
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+    }
+
+    .field-verify {
+      background-color: #fef2f2;
+      border: 1px solid #fee2e2;
+      padding: 12px;
+      border-radius: 8px;
+    }
+
+    .field-result {
+      background-color: #f0fdf4;
+      color: var(--good);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+    }
+
+    th {
+      text-align: left;
+      padding: 12px 8px;
+      border-bottom: 2px solid var(--border);
+      background: #f8fafc;
+      color: var(--muted);
+      font-size: 0.65rem;
+      text-transform: uppercase;
+    }
+
+    td {
+      padding: 10px 8px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+
+    .btn {
+      cursor: pointer;
+      border: none;
+      border-radius: 8px;
+      font-weight: 700;
+      transition: 0.2s;
+    }
+
+    .btn-add {
+      background: var(--eb-blue);
+      color: white;
+      width: 100%;
+      padding: 12px;
+      font-size: 0.9rem;
+    }
+
+    .btn-clear {
+      background: #f1f5f9;
+      color: var(--muted);
+      padding: 5px 12px;
+      font-size: 0.7rem;
+    }
+
+    .btn-del {
+      background: #fee2e2;
+      color: var(--bad);
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .numeric {
+      font-family: 'Segoe UI Mono', monospace;
+      font-weight: 700;
+      text-align: right;
+    }
+
+    .helper-text {
+      font-size: 0.65rem;
+      color: var(--muted);
+      margin-top: -0.8rem;
+      margin-bottom: 1rem;
+      display: block;
+    }
+
+    .logo-img-style {
+      background-color: white;
+      padding: 5px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div class="wrap">
+      <div class="header-content">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <img src="logo_electromat.png" alt="Electromat Balear Logo" class="logo-img-style" style="height: 50px;">
+          <h1 style="margin:0; font-size:1.1rem;">Reparto <span style="color:var(--eb-yellow)">Portes</span></h1>
+        </div>
+        <a href="index.html" style="color:white; text-decoration:none; font-size:0.8rem; font-weight:600;">← Volver al
+          Menú</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="wrap main-grid">
+    <aside>
+      <div class="card">
+        <div class="card-h">Datos del Pedido</div>
+        <div class="card-b">
+          <label>Base Imponible Factura (€)</label>
+          <input type="text" id="total-factura" class="field-manual" value="0">
+          <small class="helper-text">(Suma de productos + portes)</small>
+
+          <label>Importe del Porte (€)</label>
+          <input type="text" id="total-porte" class="field-manual" value="0">
+
+          <div class="field-info">
+            <label style="font-size: 0.6rem;">BASE CALCULADA PRODUCTOS</label>
+            <div id="base-neta" class="numeric" style="font-size:1rem; color:var(--info)">0,00 €</div>
+          </div>
+
+          <div class="field-verify" id="verify-area">
+            <label id="verify-label" style="font-size: 0.6rem;">VERIFICACIÓN REPARTO PORTE</label>
+            <div id="sum-porte-check" class="numeric" style="font-size:1.1rem;">0,00 €</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:1.5rem;">
+        <div class="card-h">Líneas de Material</div>
+        <div class="card-b">
+          <label>Precio Línea (€)</label>
+          <input type="text" id="l-total" class="field-manual">
+          <label>Cantidad (Uds)</label>
+          <input type="number" id="l-qty" class="field-manual" value="1">
+          <label>Punto X (Opcional)</label>
+          <input type="text" id="l-px" class="field-manual">
+          <button id="add-btn" class="btn btn-add">Añadir Línea</button>
+        </div>
+      </div>
+    </aside>
+
+    <section class="card">
+      <div class="card-h">
+        <span>Escandallo de Costes Real</span>
+        <button id="clear-btn" class="btn btn-clear">Limpiar Lista</button>
+      </div>
+      <div style="overflow-x:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Precio Línea</th>
+              <th>Porte/Línea</th>
+              <th>Cant.</th>
+              <th>Porte/Ud</th>
+              <th class="field-result">Coste Ud + Porte</th>
+              <th>Punto X</th>
+              <th style="width: 40px;"></th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    let rows = [];
+    const els = {
+      tFactura: document.getElementById('total-factura'),
+      tPorte: document.getElementById('total-porte'),
+      baseNeta: document.getElementById('base-neta'),
+      lTotal: document.getElementById('l-total'),
+      lQty: document.getElementById('l-qty'),
+      lPx: document.getElementById('l-px'),
+      addBtn: document.getElementById('add-btn'),
+      tbody: document.getElementById('tbody'),
+      sumCheck: document.getElementById('sum-porte-check'),
+      verifyArea: document.getElementById('verify-area'),
+      verifyLabel: document.getElementById('verify-label'),
+      clearBtn: document.getElementById('clear-btn')
+    };
+
+    function norm(val) {
+      if (!val) return 0;
+      let s = val.toString().trim().replace(',', '.');
+      return parseFloat(s) || 0;
+    }
+
+    function fmt(n, d = 2) { return n.toLocaleString('es-ES', { minimumFractionDigits: d, maximumFractionDigits: d }); }
+
+    function calculate() {
+      const tFactura = norm(els.tFactura.value);
+      const tPorte = norm(els.tPorte.value);
+
+      // Lógica clave: La base de productos es la factura menos el porte
+      const tBaseProductos = tFactura - tPorte;
+      els.baseNeta.textContent = fmt(tBaseProductos) + " €";
+
+      let checkPorteSum = 0;
+
+      els.tbody.innerHTML = rows.map((r, index) => {
+        // Reparto basado en la base de productos extraída
+        const pctReparto = tBaseProductos > 0 ? (r.total / tBaseProductos) : 0;
+        const porteLinea = pctReparto * tPorte;
+        const porteUnitario = r.qty > 0 ? (porteLinea / r.qty) : 0;
+        const precioUnitarioBase = r.qty > 0 ? (r.total / r.qty) : 0;
+        const costeUnitarioConPorte = precioUnitarioBase + porteUnitario;
+
+        checkPorteSum += porteLinea;
+
+        let finalX = "-";
+        if (r.px > 0) finalX = fmt(costeUnitarioConPorte / (r.px / 100), 3) + " €";
+
+        return `<tr>
+        <td class="numeric">${fmt(r.total)} €</td>
+        <td class="numeric" style="color:var(--muted)">${fmt(porteLinea)} €</td>
+        <td style="text-align:center">${r.qty}</td>
+        <td class="numeric" style="color:var(--muted)">${fmt(porteUnitario, 4)} €</td>
+        <td class="numeric field-result">${fmt(costeUnitarioConPorte, 3)} €</td>
+        <td class="numeric">${finalX}</td>
+        <td><button class="btn btn-del" onclick="deleteRow(${index})">✕</button></td>
+      </tr>`;
+      }).join('');
+
+      els.sumCheck.textContent = fmt(checkPorteSum) + " €";
+
+      const diff = Math.abs(checkPorteSum - tPorte);
+      const isOk = diff <= 0.01;
+      els.verifyArea.style.background = isOk ? "#f0fdf4" : "#fef2f2";
+      els.verifyArea.style.borderColor = isOk ? "var(--good)" : "var(--bad)";
+      els.sumCheck.style.color = isOk ? "var(--good)" : "var(--bad)";
+    }
+
+    function addRow() {
+      const total = norm(els.lTotal.value);
+      const qty = parseInt(els.lQty.value) || 1;
+      const px = norm(els.lPx.value);
+      if (total <= 0) return;
+      rows.unshift({ total, qty, px });
+      els.lTotal.value = ''; els.lQty.value = '1'; els.lPx.value = '';
+      els.lTotal.focus();
+      calculate();
+    }
+
+    function deleteRow(idx) { rows.splice(idx, 1); calculate(); }
+
+    els.addBtn.addEventListener('click', addRow);
+    [els.tFactura, els.tPorte, els.lTotal, els.lQty, els.lPx].forEach(input => {
+      input.addEventListener('keydown', e => { if (e.key === 'Enter') addRow(); });
+      input.addEventListener('input', calculate);
+    });
+    els.clearBtn.addEventListener('click', () => { if (confirm('¿Borrar todo?')) { rows = []; calculate(); } });
+  </script>
+</body>
+
+</html>

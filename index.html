@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Menú de Herramientas — Electromat Balear</title>
+  <style>
+    :root {
+      --eb-blue: #000079;
+      --eb-yellow: #FED80E;
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #475569;
+      --border: #e2e8f0;
+      --shadow: 0 10px 30px rgba(15, 23, 42, .08);
+      --radius: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      color: var(--text);
+      background: radial-gradient(1200px 600px at 20% -10%, rgba(254, 216, 14, .18), transparent 60%),
+        radial-gradient(1200px 600px at 90% 0%, rgba(0, 0, 121, .12), transparent 55%), var(--bg);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: var(--eb-blue);
+      color: #fff;
+      padding: 2rem 1rem;
+      border-bottom: 4px solid var(--eb-yellow);
+      text-align: center;
+    }
+
+
+    .container {
+      max-width: 1000px;
+      margin: 3rem auto;
+      padding: 0 1rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      box-shadow: var(--shadow);
+      transition: transform 0.2s;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      border-color: var(--eb-blue);
+    }
+
+    .tag {
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: var(--eb-blue);
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      background: var(--eb-yellow);
+      border-radius: 50%;
+    }
+
+    h2 {
+      margin: 0 0 1rem;
+      font-size: 1.5rem;
+    }
+
+    p {
+      color: var(--muted);
+      line-height: 1.5;
+      margin-bottom: 2rem;
+      flex-grow: 1;
+    }
+
+    .btn {
+      background: var(--eb-blue);
+      color: #fff;
+      padding: 0.75rem;
+      border-radius: 99px;
+      text-align: center;
+      font-weight: 700;
+    }
+
+    .logo-img-style {
+      background-color: white;
+      padding: 5px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <img src="logo_electromat.png" alt="Electromat Balear Logo" class="logo-img-style" style="height: 80px; margin: 0 auto 1rem; display: block;">
+    <h1 style="margin:0; font-size:1.25rem;">Herramientas <span style="color:var(--eb-yellow)">Electromat Balear</span></h1>
+    <p style="color: rgba(255,255,255,0.8); margin: 0;">Herramientas de Cálculo Interno</p>
+  </header>
+  <div class="container">
+    <a href="Electromat_Descuentos.html" class="card">
+      <div class="tag"><span class="dot"></span>Cálculo Comercial</div>
+      <h2>Descuentos de PVP</h2>
+      <p>PVP + %dto → Neto. Ideal para presupuestos rápidos e importaciones de tarifas.</p>
+      <div class="btn">Abrir Herramienta</div>
+    </a>
+    <a href="Electromat_Punto_X.html" class="card">
+      <div class="tag"><span class="dot"></span>Coeficientes</div>
+      <h2>Calculadora Punto X</h2>
+      <p>Calcula el coeficiente divisor (Valor ÷ Punto) para obtener precios de coste específicos.</p>
+      <div class="btn">Abrir Herramienta</div>
+    </a>
+    <a href="Electromat_Transporte_Coste.html" class="card">
+      <div class="tag"><span class="dot"></span>Logística</div>
+      <h2>Reparto de Portes</h2>
+      <p>Reparte proporcionalmente el coste del transporte entre múltiples artículos según su importe base.</p>
+      <div class="btn">Abrir Herramienta</div>
+    </a>
+  </div>
+</body>
+
+</html>

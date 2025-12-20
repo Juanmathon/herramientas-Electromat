@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Punto X — Electromat Balear</title>
+  <style>
+    :root {
+      --eb-blue: #000079;
+      --eb-yellow: #FED80E;
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #475569;
+      --border: #e2e8f0;
+      --shadow: 0 10px 30px rgba(15, 23, 42, .08);
+      --radius: 12px;
+      --bad: #991b1b;
+      --good: #166534;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      color: var(--text);
+      background: radial-gradient(1200px 600px at 20% -10%, rgba(254, 216, 14, .15), transparent 60%), var(--bg);
+      min-height: 100vh;
+    }
+
+    header {
+      background: var(--eb-blue);
+      color: white;
+      padding: 1rem;
+      border-bottom: 3px solid var(--eb-yellow);
+    }
+
+    .wrap {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: 350px 1fr;
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    @media (max-width: 850px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      height: fit-content;
+    }
+
+    .card-h {
+      padding: 1rem;
+      border-bottom: 1px solid var(--border);
+      font-weight: 800;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .card-b {
+      padding: 1.25rem;
+    }
+
+    label {
+      display: block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--muted);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.9rem;
+      outline: none;
+      background: #fffde7;
+      margin-bottom: 1rem;
+    }
+
+    textarea {
+      height: 120px;
+      font-family: monospace;
+      resize: vertical;
+    }
+
+    .btn {
+      cursor: pointer;
+      border: none;
+      border-radius: 8px;
+      font-weight: 700;
+      transition: 0.2s;
+      padding: 10px 15px;
+    }
+
+    .btn-add {
+      background: var(--eb-blue);
+      color: white;
+      width: 100%;
+    }
+
+    .btn-import {
+      background: #f1f5f9;
+      color: var(--eb-blue);
+      width: 100%;
+      border: 1px solid var(--eb-blue);
+      margin-bottom: 10px;
+    }
+
+    .btn-clear {
+      background: #f1f5f9;
+      color: var(--muted);
+      font-size: 0.7rem;
+      padding: 5px 12px;
+    }
+
+    .btn-del {
+      background: #fee2e2;
+      color: var(--bad);
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th {
+      text-align: left;
+      padding: 12px;
+      border-bottom: 2px solid var(--border);
+      color: var(--muted);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+    }
+
+    td {
+      padding: 10px;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.9rem;
+    }
+
+    .res-bold {
+      font-weight: 800;
+      color: var(--eb-blue);
+    }
+
+    .numeric {
+      font-family: 'Segoe UI Mono', monospace;
+      text-align: right;
+    }
+
+    .logo-img-style {
+      background-color: white;
+      padding: 5px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div class="wrap">
+      <div class="header-content">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <img src="logo_electromat.png" alt="Electromat Balear Logo" class="logo-img-style" style="height: 45px;">
+          <h1 style="margin:0; font-size:1.1rem;">Punto <span style="color:var(--eb-yellow)">X</span></h1>
+        </div>
+        <a href="index.html" style="color:white; text-decoration:none; font-size:0.8rem; font-weight:600;">← Volver al
+          Menú</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="wrap main-grid">
+    <aside>
+      <div class="card">
+        <div class="card-h">Entrada Individual</div>
+        <div class="card-b">
+          <label>Punto X (Margen)</label>
+          <input type="text" id="px-val" placeholder="Ej: 85">
+          <label>Valor Base (€)</label>
+          <input type="text" id="base-val" placeholder="Ej: 100">
+          <button id="add-btn" class="btn btn-add">Añadir a lista</button>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top: 1.5rem;">
+        <div class="card-h">Importación Masiva</div>
+        <div class="card-b">
+          <label>Pega aquí (Punto y Valor)</label>
+          <textarea id="bulk-input" placeholder="85 100&#10;70 250.50&#10;80; 12.5"></textarea>
+          <button id="import-btn" class="btn btn-import">Procesar Lista</button>
+          <small style="color: var(--muted); font-size: 0.65rem;">Soporta espacios, comas o punto y coma entre
+            valores.</small>
+        </div>
+      </div>
+    </aside>
+
+    <section class="card">
+      <div class="card-h">
+        <span>Resultados (Base ÷ 0.X)</span>
+        <button id="clear-btn" class="btn btn-clear">Limpiar Todo</button>
+      </div>
+      <div style="overflow-x:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Punto</th>
+              <th style="text-align:right">Base</th>
+              <th style="text-align:right">Divisor</th>
+              <th style="text-align:right">Resultado Final</th>
+              <th style="width: 40px;"></th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    let rows = [];
+    const els = {
+      px: document.getElementById('px-val'),
+      base: document.getElementById('base-val'),
+      bulk: document.getElementById('bulk-input'),
+      addBtn: document.getElementById('add-btn'),
+      importBtn: document.getElementById('import-btn'),
+      tbody: document.getElementById('tbody'),
+      clearBtn: document.getElementById('clear-btn')
+    };
+
+    function norm(val) {
+      if (!val) return 0;
+      let s = val.toString().trim().replace(',', '.');
+      return parseFloat(s) || 0;
+    }
+
+    function fmt(n, d = 2) { return n.toLocaleString('es-ES', { minimumFractionDigits: d, maximumFractionDigits: d }); }
+
+    function addRow(p, b) {
+      const px = norm(p);
+      const base = norm(b);
+      if (px <= 0 || base <= 0) return;
+
+      const divisor = px / 100;
+      const result = base / divisor;
+
+      rows.unshift({ px, base, divisor, result });
+      render();
+    }
+
+    function render() {
+      els.tbody.innerHTML = rows.map((r, i) => `
+      <tr>
+        <td>Punto ${r.px}</td>
+        <td class="numeric">${fmt(r.base)} €</td>
+        <td class="numeric" style="color:var(--muted)">÷ ${r.divisor.toFixed(2)}</td>
+        <td class="numeric res-bold">${fmt(r.result, 3)} €</td>
+        <td><button class="btn btn-del" onclick="deleteRow(${i})">✕</button></td>
+      </tr>
+    `).join('');
+    }
+
+    function deleteRow(i) { rows.splice(i, 1); render(); }
+
+    // Evento botón individual
+    els.addBtn.addEventListener('click', () => {
+      addRow(els.px.value, els.base.value);
+      els.base.value = '';
+      els.base.focus();
+    });
+
+    // Evento importación masiva
+    els.importBtn.addEventListener('click', () => {
+      const lines = els.bulk.value.split('\n');
+      lines.forEach(line => {
+        // Limpiamos la línea de palabras como "punto" o "de" para que sea flexible
+        const cleanLine = line.toLowerCase().replace(/punto|de|€/g, '').trim();
+        const parts = cleanLine.split(/[\s,;]+/).filter(x => x.length > 0);
+        if (parts.length >= 2) {
+          addRow(parts[0], parts[1]);
+        }
+      });
+      els.bulk.value = '';
+    });
+
+    [els.px, els.base].forEach(input => {
+      input.addEventListener('keydown', e => { if (e.key === 'Enter') els.addBtn.click(); });
+    });
+
+    els.clearBtn.addEventListener('click', () => { if (confirm('¿Borrar todo?')) { rows = []; render(); } });
+  </script>
+</body>
+
+</html>
