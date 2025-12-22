@@ -228,7 +228,18 @@
       copyStatus: document.getElementById('d-copy-status')
     };
 
-    function normalizeNumber(s) { return parseFloat(s.replace(/\./g, '').replace(',', '.')) || 0; }
+    function normalizeNumber(s) {
+      if (!s) return 0;
+      // Allow both . and , as decimal. If both exist, assume . is thousands and , is decimal
+      let val = s.trim();
+      if (val.includes(',') && val.includes('.')) {
+        val = val.replace(/\./g, '').replace(',', '.');
+      } else {
+        val = val.replace(',', '.');
+      }
+      return parseFloat(val) || 0;
+    }
+
     function format(n) {
       const dec = parseInt(d.decimals.value);
       return n.toLocaleString('es-ES', { minimumFractionDigits: dec, maximumFractionDigits: dec }) + ' €';
@@ -252,8 +263,20 @@
       d.pvpInput.value = ''; d.discInput.value = ''; d.pvpInput.focus();
     }
 
+    const handleKeydown = (e) => {
+      if (e.key === '.') {
+        e.preventDefault();
+        const start = e.target.selectionStart;
+        const end = e.target.selectionEnd;
+        const val = e.target.value;
+        e.target.value = val.substring(0, start) + ',' + val.substring(end);
+        e.target.selectionStart = e.target.selectionEnd = start + 1;
+      }
+      if (e.key === 'Enter') dAddRow();
+    };
+
     d.addBtn.addEventListener('click', dAddRow);
-    [d.pvpInput, d.discInput].forEach(el => el.addEventListener('keydown', e => { if (e.key === 'Enter') dAddRow(); }));
+    [d.pvpInput, d.discInput].forEach(el => el.addEventListener('keydown', handleKeydown));
     d.clearBtn.addEventListener('click', () => { dState.rows = []; dRender(); });
 
     d.importBtn.addEventListener('click', () => {

@@ -271,7 +271,12 @@
 
     function norm(val) {
       if (!val) return 0;
-      let s = val.toString().trim().replace(',', '.');
+      let s = val.toString().trim();
+      if (s.includes(',') && s.includes('.')) {
+        s = s.replace(/\./g, '').replace(',', '.');
+      } else {
+        s = s.replace(',', '.');
+      }
       return parseFloat(s) || 0;
     }
 
@@ -282,7 +287,10 @@
       const base = norm(b);
       if (px <= 0 || base <= 0) return;
 
-      const divisor = px / 100;
+      let divisor = px;
+      if (divisor >= 1) {
+        while (divisor >= 1) divisor /= 10;
+      }
       const result = base / divisor;
 
       rows.unshift({ px, base, divisor, result });
@@ -294,7 +302,7 @@
       <tr>
         <td>Punto ${r.px}</td>
         <td class="numeric">${fmt(r.base)} €</td>
-        <td class="numeric" style="color:var(--muted)">÷ ${r.divisor.toFixed(2)}</td>
+        <td class="numeric" style="color:var(--muted)">÷ ${r.divisor.toFixed(4)}</td>
         <td class="numeric res-bold">${fmt(r.result, 3)} €</td>
         <td><button class="btn btn-del" onclick="deleteRow(${i})">✕</button></td>
       </tr>
@@ -302,6 +310,18 @@
     }
 
     function deleteRow(i) { rows.splice(i, 1); render(); }
+
+    const handleKeydown = (e) => {
+      if (e.key === '.') {
+        e.preventDefault();
+        const start = e.target.selectionStart;
+        const end = e.target.selectionEnd;
+        const val = e.target.value;
+        e.target.value = val.substring(0, start) + ',' + val.substring(end);
+        e.target.selectionStart = e.target.selectionEnd = start + 1;
+      }
+      if (e.key === 'Enter') els.addBtn.click();
+    };
 
     // Evento botón individual
     els.addBtn.addEventListener('click', () => {
@@ -325,7 +345,7 @@
     });
 
     [els.px, els.base].forEach(input => {
-      input.addEventListener('keydown', e => { if (e.key === 'Enter') els.addBtn.click(); });
+      input.addEventListener('keydown', handleKeydown);
     });
 
     els.clearBtn.addEventListener('click', () => { if (confirm('¿Borrar todo?')) { rows = []; render(); } });

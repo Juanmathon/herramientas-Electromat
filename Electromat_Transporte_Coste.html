@@ -311,7 +311,12 @@
 
     function norm(val) {
       if (!val) return 0;
-      let s = val.toString().trim().replace(',', '.');
+      let s = val.toString().trim();
+      if (s.includes(',') && s.includes('.')) {
+        s = s.replace(/\./g, '').replace(',', '.');
+      } else {
+        s = s.replace(',', '.');
+      }
       return parseFloat(s) || 0;
     }
 
@@ -338,7 +343,13 @@
         checkPorteSum += porteLinea;
 
         let finalX = "-";
-        if (r.px > 0) finalX = fmt(costeUnitarioConPorte / (r.px / 100), 3) + " €";
+        if (r.px > 0) {
+          let div = r.px;
+          if (div >= 1) {
+            while (div >= 1) div /= 10;
+          }
+          finalX = fmt(costeUnitarioConPorte / div, 3) + " €";
+        }
 
         return `<tr>
         <td class="numeric">${fmt(r.total)} €</td>
@@ -373,9 +384,23 @@
 
     function deleteRow(idx) { rows.splice(idx, 1); calculate(); }
 
+    const handleKeydown = (e) => {
+      if (e.key === '.') {
+        e.preventDefault();
+        const start = e.target.selectionStart;
+        const end = e.target.selectionEnd;
+        const val = e.target.value;
+        e.target.value = val.substring(0, start) + ',' + val.substring(end);
+        e.target.selectionStart = e.target.selectionEnd = start + 1;
+        // Trigger input event to recalculate
+        e.target.dispatchEvent(new Event('input'));
+      }
+      if (e.key === 'Enter') addRow();
+    };
+
     els.addBtn.addEventListener('click', addRow);
     [els.tFactura, els.tPorte, els.lTotal, els.lQty, els.lPx].forEach(input => {
-      input.addEventListener('keydown', e => { if (e.key === 'Enter') addRow(); });
+      input.addEventListener('keydown', handleKeydown);
       input.addEventListener('input', calculate);
     });
     els.clearBtn.addEventListener('click', () => { if (confirm('¿Borrar todo?')) { rows = []; calculate(); } });
