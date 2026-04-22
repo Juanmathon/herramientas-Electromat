@@ -153,6 +153,7 @@
       <div class="save-bar">
         <input type="text" id="offer-title" placeholder="Título de la oferta (ej: Presupuesto Cliente X)">
         <button class="btn btn-primary" onclick="dbSave()" id="btn-save">💾 Guardar Oferta</button>
+        <button class="btn" style="background:#eee; color:#333" onclick="resetEditor()">✨ Nueva Oferta</button>
       </div>
       
       <div id="db-list" class="db-list">
@@ -184,9 +185,10 @@
         <label>Descripción</label>
         <textarea id="in-desc" style="min-height:60px" placeholder="Nombre y características del producto..."></textarea>
       </div>
-      <div style="margin-top:16px">
-        <button class="btn btn-primary" onclick="addItem()">+ Añadir a la oferta</button>
-        <button class="btn btn-danger" style="margin-left:10px" onclick="clearItems()">Limpiar todo</button>
+      <div style="margin-top:16px; display:flex; gap:10px">
+        <button class="btn btn-primary" onclick="addItem()" id="btn-add-product" style="flex:1">+ Añadir a la oferta</button>
+        <button class="btn" id="btn-cancel-edit" style="display:none; background:#eee; color:#333" onclick="cancelEdit()">Cancelar Edición</button>
+        <button class="btn btn-danger" onclick="clearItems()">Limpiar todo</button>
       </div>
     </div>
   </div>
@@ -219,7 +221,8 @@
   const state = {
     items: [],
     savedOffers: JSON.parse(localStorage.getItem('eb_offers') || '[]'),
-    currentOfferId: null
+    currentOfferId: null,
+    editingItemId: null
   };
 
   // Inicializar logo y fecha
@@ -260,6 +263,17 @@
     state.currentOfferId = offer.id;
     updateDBList();
     alert("Oferta guardada correctamente.");
+  }
+
+  function resetEditor() {
+    if (state.items.length > 0 && !confirm("¿Quieres limpiar el editor? Se perderán los cambios no guardados.")) return;
+    state.items = [];
+    state.currentOfferId = null;
+    state.editingItemId = null;
+    document.getElementById('offer-title').value = '';
+    cancelEdit(); // Reset buttons
+    render();
+    updateDBList();
   }
 
   function dbLoad(id) {
@@ -360,6 +374,37 @@
     });
   }
 
+  // --- Lógica de Edición de Productos ---
+
+  function editItem(id) {
+    const item = state.items.find(i => i.id === id);
+    if (!item) return;
+
+    state.editingItemId = id;
+    
+    // Cargar datos en el formulario
+    document.getElementById('in-ref').value = item.ref;
+    document.getElementById('in-desc').value = item.desc;
+    document.getElementById('in-price').value = item.price;
+    
+    // Cambiar botones UI
+    document.getElementById('btn-add-product').textContent = "💾 Actualizar Producto";
+    document.getElementById('btn-cancel-edit').style.display = "block";
+    
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function cancelEdit() {
+    state.editingItemId = null;
+    document.getElementById('in-ref').value = '';
+    document.getElementById('in-desc').value = '';
+    document.getElementById('in-price').value = '';
+    document.getElementById('in-img').value = '';
+    document.getElementById('in-brand-img').value = '';
+    document.getElementById('btn-add-product').textContent = "+ Añadir a la oferta";
+    document.getElementById('btn-cancel-edit').style.display = "none";
+  }
+
   async function addItem() {
     const ref = document.getElementById('in-ref').value;
     const desc = document.getElementById('in-desc').value;
@@ -372,32 +417,26 @@
       return;
     }
 
-    let imgData = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23f1f5f9'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%23cbd5e1' font-family='sans-serif' font-size='10'%3ESin Imagen%3C/text%3E%3C/svg%3E";
-    if (imgFile) {
-      imgData = await handleImageUpload(imgFile);
+    // Si estamos editando, cogemos la imagen anterior como base
+    let existingItem = state.editingItemId ? state.items.find(i => i.id === state.editingItemId) : null;
+
+    let imgData = existingItem ? existingItem.img : "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23f1f5f9'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%23cbd5e1' font-family='sans-serif' font-size='10'%3ESin Imagen%3C/text%3E%3C/svg%3E";
+    if (imgFile) imgData = await handleImageUpload(imgFile);
+
+    let brandImgData = existingItem ? existingItem.brandImg : "";
+    if (brandImgFile) brandImgData = await handleImageUpload(brandImgFile);
+
+    if (state.editingItemId) {
+      // ACTUALIZAR
+      const index = state.items.findIndex(i => i.id === state.editingItemId);
+      state.items[index] = { ...state.items[index], ref, desc, price, img: imgData, brandImg: brandImgData };
+      state.editingItemId = null;
+    } else {
+      // AÑADIR NUEVO
+      state.items.push({ id: Date.now(), ref, desc, price, img: imgData, brandImg: brandImgData });
     }
 
-    let brandImgData = "";
-    if (brandImgFile) {
-      brandImgData = await handleImageUpload(brandImgFile);
-    }
-
-    state.items.push({
-      id: Date.now(),
-      ref,
-      desc,
-      price,
-      img: imgData,
-      brandImg: brandImgData
-    });
-
-    // Limpiar inputs
-    document.getElementById('in-ref').value = '';
-    document.getElementById('in-desc').value = '';
-    document.getElementById('in-price').value = '';
-    document.getElementById('in-img').value = '';
-    document.getElementById('in-brand-img').value = '';
-
+    cancelEdit(); // Limpia campos y resetea botones
     render();
   }
 
@@ -425,8 +464,11 @@
         <div class="product-details">
           ${item.brandImg ? `<img class="brand-logo" src="${item.brandImg}" alt="Fabricante">` : ''}
           <div style="display:flex; justify-content:space-between; align-items:flex-start">
-             <div class="product-ref" style="max-width: 80%">${item.ref}</div>
-             <button class="btn btn-danger editor-section" style="padding:4px 8px; font-size:10px; margin-right:-5px" onclick="removeItem(${item.id})">Eliminar</button>
+             <div class="product-ref" style="max-width: 70%">${item.ref}</div>
+             <div class="editor-section" style="display:flex; gap:3px">
+               <button class="btn btn-sm" style="background:#f1f5f9; color:#475569; padding:2px 6px" onclick="editItem(${item.id})">✏️</button>
+               <button class="btn btn-danger btn-sm" style="padding:2px 6px" onclick="removeItem(${item.id})">🗑️</button>
+             </div>
           </div>
           <div class="product-desc">${item.desc}</div>
           <div class="product-price">${parseFloat(item.price.replace(',','.')).toLocaleString('es-ES', { minimumFractionDigits: 2 })} €</div>
