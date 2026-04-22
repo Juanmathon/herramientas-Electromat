@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Punto X — Electromat Balear</title>
+  <style>
+    :root {
+      --eb-blue: #000079;
+      --eb-yellow: #FED80E;
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #475569;
+      --border: #e2e8f0;
+      --shadow: 0 10px 30px rgba(15, 23, 42, .08);
+      --radius: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--text);
+      background: radial-gradient(1200px 600px at 20% -10%, rgba(254, 216, 14, .18), transparent 60%),
+        radial-gradient(1200px 600px at 90% 0%, rgba(0, 0, 121, .12), transparent 55%),
+        var(--bg);
+      min-height: 100vh;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: linear-gradient(90deg, var(--eb-blue), #0b1aa6);
+      color: white;
+      border-bottom: 3px solid var(--eb-yellow);
+    }
+
+    .wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 16px 18px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .logo-emblem {
+      background: #fff;
+      padding: 5px;
+      border-radius: 8px;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .logo-emblem span {
+      color: var(--eb-blue);
+      font-weight: 900;
+      font-size: 1.5rem;
+    }
+
+    .title h1 {
+      font-size: 18px;
+      margin: 0;
+      letter-spacing: .2px;
+    }
+
+    .nav-link {
+      color: #fff;
+      text-decoration: none;
+      font-size: 0.85rem;
+      opacity: 0.8;
+      font-weight: 600;
+    }
+
+    .nav-link:hover {
+      opacity: 1;
+    }
+
+    main .wrap {
+      padding: 24px 18px 60px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 20px;
+    }
+
+    @media (max-width: 980px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .card-h {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: var(--eb-yellow);
+      box-shadow: 0 0 0 3px rgba(254, 216, 14, .22);
+    }
+
+    .card-b {
+      padding: 20px;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      font-size: 14px;
+      outline: none;
+      margin-bottom: 12px;
+    }
+
+    input:focus {
+      border-color: var(--eb-blue);
+      box-shadow: 0 0 0 4px rgba(0, 0, 121, .1);
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 999px;
+      padding: 10px 16px;
+      font-weight: 800;
+      cursor: pointer;
+      font-size: 13px;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: var(--eb-blue);
+      color: white;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    .btn-accent {
+      background: var(--eb-yellow);
+      color: #101828;
+    }
+
+    .btn-ghost {
+      background: #f1f5f9;
+      color: var(--muted);
+    }
+
+    button:hover {
+      filter: brightness(1.05);
+      transform: translateY(-1px);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    th {
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .6px;
+      padding: 10px;
+      border-bottom: 2px solid var(--border);
+      text-align: left;
+    }
+
+    td {
+      padding: 12px 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .right {
+      text-align: right;
+      font-family: monospace;
+      font-weight: 700;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="wrap">
+      <div class="topbar">
+        <div class="brand">
+          <div class="logo-emblem"><span>E</span></div>
+          <div class="title">
+            <h1>Electromat <span style="color:var(--eb-yellow)">Punto X</span></h1>
+          </div>
+        </div>
+        <a href="index.html" class="nav-link">← Volver al Menú</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="wrap">
+      <div class="grid">
+        <div class="card">
+          <div class="card-h">
+            <span style="font-weight:800; font-size:14px;">Calculadora de Coeficiente</span>
+            <div class="dot"></div>
+          </div>
+          <div class="card-b">
+            <label>PUNTO (X)</label>
+            <input type="number" id="px-x" placeholder="Ej: 85" autofocus>
+            <label>VALOR BRUTO (€)</label>
+            <input type="text" id="px-val" placeholder="0,00">
+            <button id="px-add" class="btn-primary">Añadir a la lista (Intro)</button>
+
+            <hr style="border:0; border-top:1px solid var(--border); margin:20px 0;">
+
+            <label>IMPORTACIÓN RÁPIDA (Punto Valor)</label>
+            <textarea id="px-bulk" rows="3" placeholder="85 10,50&#10;90 12,00"></textarea>
+            <button id="px-import" class="btn-accent" style="width:100%">Procesar Lista</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-h">
+            <span style="font-weight:800; font-size:14px;">Resultados</span>
+          </div>
+          <div class="card-b">
+            <table>
+              <thead>
+                <tr>
+                  <th>Punto</th>
+                  <th>Bruto</th>
+                  <th class="right">Resultado</th>
+                </tr>
+              </thead>
+              <tbody id="px-tbody"></tbody>
+            </table>
+            <div class="actions" style="margin-top:20px;">
+              <button id="px-clear" class="btn-ghost">Limpiar Historial</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const pxState = { rows: [] };
+    const px = {
+      xInput: document.getElementById('px-x'),
+      valInput: document.getElementById('px-val'),
+      addBtn: document.getElementById('px-add'),
+      tbody: document.getElementById('px-tbody'),
+      bulk: document.getElementById('px-bulk'),
+      importBtn: document.getElementById('px-import'),
+      clearBtn: document.getElementById('px-clear')
+    };
+
+    function norm(s) { return parseFloat(s.toString().replace(/\./g, '').replace(',', '.')) || 0; }
+
+    function render() {
+      px.tbody.innerHTML = pxState.rows.map(r => `
+        <tr>
+          <td style="color:var(--muted); font-weight:600;">X ${r.x}</td>
+          <td>${r.val.toLocaleString('es-ES', { minimumFractionDigits: 2 })} €</td>
+          <td class="right" style="color:var(--eb-blue); font-size:15px;">${(r.val / r.x).toLocaleString('es-ES', { minimumFractionDigits: 4, maximumFractionDigits: 4 })}</td>
+        </tr>`).join('');
+    }
+
+    function add() {
+      const x = parseFloat(px.xInput.value);
+      const val = norm(px.valInput.value);
+      if (!x || x === 0 || !val) return;
+      pxState.rows.unshift({ x, val });
+      render();
+      px.valInput.value = ''; px.xInput.focus();
+    }
+
+    px.addBtn.addEventListener('click', add);
+    [px.xInput, px.valInput].forEach(el => el.addEventListener('keydown', e => { if (e.key === 'Enter') add(); }));
+
+    px.importBtn.addEventListener('click', () => {
+      const lines = px.bulk.value.split('\n');
+      lines.forEach(l => {
+        const p = l.trim().split(/\s+/);
+        if (p.length >= 2) pxState.rows.unshift({ x: norm(p[0]), val: norm(p[1]) });
+      });
+      render();
+      px.bulk.value = '';
+    });
+
+    px.clearBtn.addEventListener('click', () => { pxState.rows = []; render(); });
+  </script>
+</body>
+
+</html>
