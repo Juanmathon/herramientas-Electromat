@@ -77,10 +77,11 @@
     .a4-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; flex: 1; align-content: flex-start; }
     .product-card { border: 1px solid #eee; padding: 10px; display: flex; gap: 15px; border-radius: 8px; page-break-inside: avoid; }
     .product-img { width: 80px; height: 80px; object-fit: contain; flex-shrink: 0; }
-    .product-details { flex: 1; }
+    .product-details { flex: 1; position: relative; }
     .product-ref { font-size: 11px; font-weight: 900; color: var(--eb-blue); text-transform: uppercase; }
     .product-desc { font-size: 13px; margin: 4px 0; line-height: 1.3; font-weight: 500; min-height: 2.6em; }
     .product-price { font-size: 18px; font-weight: 900; color: var(--text); margin-top: 5px; }
+    .brand-logo { position: absolute; top: 0; right: 0; height: 18px; width: auto; max-width: 60px; object-fit: contain; }
 
     .a4-footer { margin-top: 20px; border-top: 1px solid #ddd; padding-top: 15px; font-size: 12px; color: var(--muted); text-align: center; font-style: italic; }
 
@@ -131,8 +132,12 @@
           <input type="text" id="in-price" placeholder="0.00">
         </div>
         <div>
-          <label>Imagen</label>
+          <label>Imagen Producto</label>
           <input type="file" id="in-img" accept="image/*">
+        </div>
+        <div>
+          <label>Logo Fabricante (Opcional)</label>
+          <input type="file" id="in-brand-img" accept="image/*">
         </div>
       </div>
       <div>
@@ -197,6 +202,7 @@
     const desc = document.getElementById('in-desc').value;
     const price = document.getElementById('in-price').value;
     const imgFile = document.getElementById('in-img').files[0];
+    const brandImgFile = document.getElementById('in-brand-img').files[0];
 
     if (!ref || !desc || !price) {
       alert("Por favor, rellena Referencia, Descripción y Precio.");
@@ -208,12 +214,18 @@
       imgData = await handleImageUpload(imgFile);
     }
 
+    let brandImgData = "";
+    if (brandImgFile) {
+      brandImgData = await handleImageUpload(brandImgFile);
+    }
+
     state.items.push({
       id: Date.now(),
       ref,
       desc,
       price,
-      img: imgData
+      img: imgData,
+      brandImg: brandImgData
     });
 
     // Limpiar inputs
@@ -221,6 +233,7 @@
     document.getElementById('in-desc').value = '';
     document.getElementById('in-price').value = '';
     document.getElementById('in-img').value = '';
+    document.getElementById('in-brand-img').value = '';
 
     render();
   }
@@ -247,9 +260,10 @@
       card.innerHTML = `
         <img class="product-img" src="${item.img}" alt="Producto">
         <div class="product-details">
+          ${item.brandImg ? `<img class="brand-logo" src="${item.brandImg}" alt="Fabricante">` : ''}
           <div style="display:flex; justify-content:space-between; align-items:flex-start">
-             <div class="product-ref">${item.ref}</div>
-             <button class="btn btn-danger editor-section" style="padding:4px 8px; font-size:10px" onclick="removeItem(${item.id})">Eliminar</button>
+             <div class="product-ref" style="max-width: 80%">${item.ref}</div>
+             <button class="btn btn-danger editor-section" style="padding:4px 8px; font-size:10px; margin-right:-5px" onclick="removeItem(${item.id})">Eliminar</button>
           </div>
           <div class="product-desc">${item.desc}</div>
           <div class="product-price">${parseFloat(item.price.replace(',','.')).toLocaleString('es-ES', { minimumFractionDigits: 2 })} €</div>
