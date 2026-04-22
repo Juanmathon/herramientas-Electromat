@@ -59,6 +59,23 @@
     .item-row img { width: 60px; height: 60px; object-fit: contain; border-radius: 4px; background: white; border: 1px solid var(--border); }
     .item-info { flex: 1; }
 
+    /* DB Panel Styles */
+    .database-panel { background: #fdfdfd; }
+    .save-bar { display: flex; gap: 12px; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+    .db-list { display: flex; flex-wrap: wrap; gap: 12px; }
+    .db-item { 
+      background: white; border: 1px solid var(--border); padding: 12px; border-radius: 12px; 
+      min-width: 200px; max-width: 300px; flex: 1;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .db-item:hover { border-color: var(--eb-blue); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+    .db-item-header { display: flex; justify-content: space-between; align-items: flex-start; }
+    .db-item-title { font-weight: 700; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .db-item-date { font-size: 11px; color: var(--muted); }
+    .db-item-actions { display: flex; gap: 6px; margin-top: 4px; }
+    .btn-sm { padding: 6px 12px; font-size: 11px; border-radius: 6px; }
+    .active-offer { border: 2px solid var(--eb-blue); background: #f0f7ff; }
+
     /* Print Preview area on Screen */
     #preview-container { margin-top: 40px; background: #525659; padding: 40px 0; display: flex; justify-content: center; }
     .a4-page {
@@ -72,16 +89,15 @@
     .a4-logo { height: 60px; width: auto; }
     .a4-offer-title { text-align: right; }
     .a4-offer-title h2 { margin: 0; color: var(--eb-blue); text-transform: uppercase; letter-spacing: 1px; }
-    .a4-offer-title p { margin: 5px 0 0; color: var(--muted); font-size: 14px; }
 
     .a4-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; flex: 1; align-content: flex-start; }
     .product-card { border: 1px solid #eee; padding: 15px; display: flex; gap: 20px; border-radius: 12px; page-break-inside: avoid; background: #fff; min-height: 140px; }
     .product-img { width: 100px; height: 100px; object-fit: contain; flex-shrink: 0; }
     .product-details { flex: 1; position: relative; display: flex; flex-direction: column; justify-content: space-between; }
     .product-ref { font-size: 13px; font-weight: 900; color: var(--eb-blue); text-transform: uppercase; margin-bottom: 4px; }
-    .product-desc { font-size: 15px; margin: 0; line-height: 1.3; font-weight: 600; flex: 1; margin-bottom: 8px; }
-    .product-price { font-size: 22px; font-weight: 900; color: var(--text); }
-    .brand-logo { position: absolute; top: 0; right: 0; height: 24px; width: auto; max-width: 70px; object-fit: contain; }
+    .product-desc { font-size: 15px; margin: 12px 0 8px 0; line-height: 1.3; font-weight: 600; flex: 1; }
+    .product-price { font-size: 22px; font-weight: 900; color: #d91e18; }
+    .brand-logo { position: absolute; top: 0; right: 0; height: 28px; width: auto; max-width: 80px; object-fit: contain; }
 
     .a4-footer { margin-top: 20px; border-top: 1px solid #ddd; padding-top: 15px; font-size: 12px; color: var(--muted); text-align: center; font-style: italic; }
 
@@ -90,8 +106,9 @@
       body { background: white; margin: 0; padding: 0; }
       header, .editor-section { display: none !important; }
       #preview-container { padding: 0; background: none; display: block; }
-      .a4-page { width: 100%; box-shadow: none; padding: 15mm; height: auto; }
+      .a4-page { width: 100%; box-shadow: none; padding: 15mm; padding-bottom: 25mm; height: auto; position: relative; }
       .a4-grid { grid-template-columns: 1fr 1fr !important; display: grid !important; }
+      .a4-footer { position: fixed; bottom: 10mm; left: 15mm; right: 15mm; background: white; border-top: 1px solid #ddd; padding-top: 10px; }
       @page { size: A4; margin: 0; }
     }
 
@@ -121,6 +138,28 @@
 
 <main>
   <div class="wrap editor-section">
+    <!-- Panel de Base de Datos -->
+    <div class="editor-card database-panel">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px">
+        <h3 style="margin:0">Mis Ofertas</h3>
+        <div style="display:flex; gap:8px">
+           <button class="btn btn-sm" style="background:#eee" onclick="dbExport()">📤 Exportar Todo</button>
+           <label class="btn btn-sm" style="background:#eee; cursor:pointer">
+             📥 Importar <input type="file" id="db-import" style="display:none" onchange="dbImport(event)">
+           </label>
+        </div>
+      </div>
+      
+      <div class="save-bar">
+        <input type="text" id="offer-title" placeholder="Título de la oferta (ej: Presupuesto Cliente X)">
+        <button class="btn btn-primary" onclick="dbSave()" id="btn-save">💾 Guardar Oferta</button>
+      </div>
+      
+      <div id="db-list" class="db-list">
+        <p style="font-size:12px; color:var(--muted)">No tienes ofertas guardadas aún.</p>
+      </div>
+    </div>
+
     <div class="editor-card">
       <h3 style="margin-top:0">Añadir Producto</h3>
       <div class="form-grid">
@@ -159,7 +198,6 @@
         <img class="a4-logo" id="main-logo" src="" alt="Electromat">
         <div class="a4-offer-title">
           <h2>Oferta Comercial</h2>
-          <p id="offer-date"></p>
         </div>
       </div>
 
@@ -180,15 +218,139 @@
 
   const state = {
     items: [],
+    savedOffers: JSON.parse(localStorage.getItem('eb_offers') || '[]'),
+    currentOfferId: null
   };
 
   // Inicializar logo y fecha
   window.onload = () => {
     document.getElementById('main-logo').src = LOGO_BASE64;
-    document.getElementById('offer-date').textContent = new Date().toLocaleDateString('es-ES', {
-      day: 'numeric', month: 'long', year: 'numeric'
-    });
+    updateDBList();
   };
+
+  // --- Lógica de Base de Datos ---
+
+  function dbSave() {
+    const title = document.getElementById('offer-title').value.trim();
+    if (!title) {
+      alert("Por favor, ponle un título a la oferta para guardarla.");
+      return;
+    }
+
+    if (state.items.length === 0) {
+      alert("No puedes guardar una oferta vacía.");
+      return;
+    }
+
+    const offer = {
+      id: state.currentOfferId || Date.now(),
+      title: title,
+      date: new Date().toLocaleString('es-ES'),
+      items: state.items
+    };
+
+    const index = state.savedOffers.findIndex(o => o.id === offer.id);
+    if (index > -1) {
+      state.savedOffers[index] = offer;
+    } else {
+      state.savedOffers.unshift(offer);
+    }
+
+    localStorage.setItem('eb_offers', JSON.stringify(state.savedOffers));
+    state.currentOfferId = offer.id;
+    updateDBList();
+    alert("Oferta guardada correctamente.");
+  }
+
+  function dbLoad(id) {
+    const offer = state.savedOffers.find(o => o.id === id);
+    if (!offer) return;
+
+    state.items = JSON.parse(JSON.stringify(offer.items)); // Deep copy
+    state.currentOfferId = offer.id;
+    document.getElementById('offer-title').value = offer.title;
+    
+    render();
+    updateDBList();
+  }
+
+  function dbDelete(id, event) {
+    if (event) event.stopPropagation();
+    if (!confirm("¿Seguro que quieres eliminar esta oferta del archivo?")) return;
+
+    state.savedOffers = state.savedOffers.filter(o => o.id !== id);
+    localStorage.setItem('eb_offers', JSON.stringify(state.savedOffers));
+    
+    if (state.currentOfferId === id) {
+      state.currentOfferId = null;
+      document.getElementById('offer-title').value = '';
+    }
+
+    updateDBList();
+  }
+
+  function dbExport() {
+    if (state.savedOffers.length === 0) {
+      alert("No hay ofertas para exportar.");
+      return;
+    }
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state.savedOffers));
+    const downloadAnchorNode = document.createElement('a');
+    downloadAnchorNode.setAttribute("href", dataStr);
+    downloadAnchorNode.setAttribute("download", "electromat_ofertas_backup.json");
+    document.body.appendChild(downloadAnchorNode);
+    downloadAnchorNode.click();
+    downloadAnchorNode.remove();
+  }
+
+  function dbImport(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const imported = JSON.parse(e.target.result);
+        if (!Array.isArray(imported)) throw new Error();
+        
+        if (confirm("¿Quieres fusionar estas ofertas con las actuales? (Cancelar para reemplazarlas por completo)")) {
+           // Fusionar sin duplicar IDs
+           const existingIds = new Set(state.savedOffers.map(o => o.id));
+           imported.forEach(o => {
+             if (!existingIds.has(o.id)) state.savedOffers.push(o);
+           });
+        } else {
+           state.savedOffers = imported;
+        }
+
+        localStorage.setItem('eb_offers', JSON.stringify(state.savedOffers));
+        updateDBList();
+        alert("Ofertas importadas con éxito.");
+      } catch (err) {
+        alert("Error al importar: El archivo no es válido.");
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  function updateDBList() {
+    const list = document.getElementById('db-list');
+    if (state.savedOffers.length === 0) {
+      list.innerHTML = '<p style="font-size:12px; color:var(--muted)">No tienes ofertas guardadas aún.</p>';
+      return;
+    }
+
+    list.innerHTML = state.savedOffers.map(offer => `
+      <div class="db-item ${state.currentOfferId === offer.id ? 'active-offer' : ''}" onclick="dbLoad(${offer.id})">
+        <div class="db-item-header">
+           <div class="db-item-title">${offer.title}</div>
+           <button class="btn btn-danger btn-sm" onclick="dbDelete(${offer.id}, event)">🗑️</button>
+        </div>
+        <div class="db-item-date">${offer.date}</div>
+        <div class="db-item-date">${offer.items.length} productos</div>
+      </div>
+    `).join('');
+  }
 
   async function handleImageUpload(file) {
     return new Promise((resolve) => {
