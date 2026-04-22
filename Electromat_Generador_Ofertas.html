@@ -91,7 +91,8 @@
     .a4-offer-title h2 { margin: 0; color: var(--eb-blue); text-transform: uppercase; letter-spacing: 1px; }
 
     .a4-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; flex: 1; align-content: flex-start; }
-    .product-card { border: 1px solid #eee; padding: 15px; display: flex; gap: 20px; border-radius: 12px; page-break-inside: avoid; background: #fff; min-height: 140px; }
+    .product-card { position: relative; border: 1px solid #eee; padding: 15px; display: flex; gap: 20px; border-radius: 12px; page-break-inside: avoid; background: #fff; min-height: 140px; }
+    .product-actions { position: absolute; top: 10px; right: 10px; display: flex; gap: 6px; z-index: 10; }
     .product-img { width: 100px; height: 100px; object-fit: contain; flex-shrink: 0; }
     .product-details { flex: 1; position: relative; display: flex; flex-direction: column; justify-content: space-between; }
     .product-ref { font-size: 13px; font-weight: 900; color: var(--eb-blue); text-transform: uppercase; margin-bottom: 4px; }
@@ -460,15 +461,15 @@
       const card = document.createElement('div');
       card.className = 'product-card';
       card.innerHTML = `
+        <div class="product-actions no-print">
+            <button class="btn btn-sm btn-primary" style="padding:4px 8px; font-size:10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1)" onclick="editItem(${item.id})">EDITAR</button>
+            <button class="btn btn-sm btn-danger" style="padding:4px 8px; font-size:10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1)" onclick="removeItem(${item.id})">BORRAR</button>
+        </div>
         <img class="product-img" src="${item.img}" alt="Producto">
         <div class="product-details">
           ${item.brandImg ? `<img class="brand-logo" src="${item.brandImg}" alt="Fabricante">` : ''}
           <div style="display:flex; justify-content:space-between; align-items:flex-start">
-             <div class="product-ref" style="max-width: 70%">${item.ref}</div>
-             <div class="no-print" style="display:flex; gap:5px">
-               <button class="btn btn-sm btn-primary" style="padding:4px 8px; font-size:10px" onclick="editItem(${item.id})">EDITAR</button>
-               <button class="btn btn-sm btn-danger" style="padding:4px 8px; font-size:10px" onclick="removeItem(${item.id})">BORRAR</button>
-             </div>
+             <div class="product-ref" style="max-width: 80%">${item.ref}</div>
           </div>
           <div class="product-desc">${item.desc}</div>
           <div class="product-price">${parseFloat(item.price.replace(',','.')).toLocaleString('es-ES', { minimumFractionDigits: 2 })} €</div>
