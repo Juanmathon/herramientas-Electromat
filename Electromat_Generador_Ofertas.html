@@ -104,7 +104,7 @@
     /* Print Logic */
     @media print {
       body { background: white; margin: 0; padding: 0; }
-      header, .editor-section { display: none !important; }
+      header, .no-print { display: none !important; }
       #preview-container { padding: 0; background: none; display: block; }
       .a4-page { width: 100%; box-shadow: none; padding: 15mm; padding-bottom: 25mm; height: auto; position: relative; }
       .a4-grid { grid-template-columns: 1fr 1fr !important; display: grid !important; }
@@ -465,9 +465,9 @@
           ${item.brandImg ? `<img class="brand-logo" src="${item.brandImg}" alt="Fabricante">` : ''}
           <div style="display:flex; justify-content:space-between; align-items:flex-start">
              <div class="product-ref" style="max-width: 70%">${item.ref}</div>
-             <div class="editor-section" style="display:flex; gap:3px">
-               <button class="btn btn-sm" style="background:#f1f5f9; color:#475569; padding:2px 6px" onclick="editItem(${item.id})">✏️</button>
-               <button class="btn btn-danger btn-sm" style="padding:2px 6px" onclick="removeItem(${item.id})">🗑️</button>
+             <div class="no-print" style="display:flex; gap:5px">
+               <button class="btn btn-sm btn-primary" style="padding:4px 8px; font-size:10px" onclick="editItem(${item.id})">EDITAR</button>
+               <button class="btn btn-sm btn-danger" style="padding:4px 8px; font-size:10px" onclick="removeItem(${item.id})">BORRAR</button>
              </div>
           </div>
           <div class="product-desc">${item.desc}</div>
